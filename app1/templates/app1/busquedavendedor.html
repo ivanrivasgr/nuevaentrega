@@ -1,0 +1,15 @@
+{% extends "app1/padre.html" %} 
+
+{% load static %} 
+
+{% block contenidoQueCambia %} 
+
+<form action="/app1/buscar1/"     method="get">{% csrf_token %} 
+    
+    <input type="text" name="vendedores_views" id="vendedores_views"> 
+    <input type="submit" value="Buscar"> 
+</form>
+
+
+
+{% endblock %} 

@@ -1,0 +1,14 @@
+{% extends "app1/padre.html" %} 
+
+{% load static %} 
+
+{% block contenidoQueCambia %} 
+
+nombreCompleto: {{producto.nombreCompleto}}
+Referencia: {{producto.Referencia}}
+fechadecaducidad: {{producto.fechadecaducidad}}
+categoria: {{producto.categoria}}
+
+<a href="{%url 'List'%}">Regresar</a>
+
+{% endblock %} 
