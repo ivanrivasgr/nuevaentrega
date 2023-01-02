@@ -10,3 +10,8 @@ class VendedorFormulario(forms.Form):
     nombreCompleto = forms.CharField(max_length=40)
     telefono = forms.IntegerField()
     fechaNac = forms.DateField()
+
+class ClienteFormulario(forms.Form):
+    nombreCompleto = forms.CharField(max_length=40)
+    telefono = forms.IntegerField()
+    fechaNac = forms.DateField()

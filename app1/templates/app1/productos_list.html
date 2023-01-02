@@ -8,9 +8,9 @@
         {% for producto in object_list %}
             <p>{{producto.nombreCompleto}}</p>
             <p>
-                <a href="{% url 'Detail' productos.id %}">Ver</a>
-                <a href="{% url 'Edit' productos.id %}">Editar</a>
-                <a href="{% url 'Delete' productos.id %}">Delete</a>
+                <a href="{% url 'Detail' producto.id %}">Ver</a>
+                <a href="{% url 'Edit' producto.id %}">Editar</a>
+                <a href="{% url 'Delete' producto.id %}">Delete</a>
             </p>
         {% endfor %}
 

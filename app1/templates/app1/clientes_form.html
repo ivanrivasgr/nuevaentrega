@@ -1,0 +1,26 @@
+{% extends "app1/padre.html" %} 
+
+{% load static %} 
+
+{% block contenidoQueCambia %} 
+
+<h1>Clientes</h1>
+<p>Aca va la info de los Clientes</p>
+
+
+<p>
+    Cualquier cosa
+</p>
+
+Ingresar un cliente:
+
+<form action=""     method="post">{% csrf_token %} 
+    <table>
+        {{form.as_table}}
+    </table>
+    <input type="submit" value="Crear"> 
+</form>
+
+<a href="{% url 'app1/ buscar2/'%"> Buscar por cliente</a>
+
+{% endblock %}

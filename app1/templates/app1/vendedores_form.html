@@ -1,0 +1,26 @@
+{% extends "app1/padre.html" %} 
+
+{% load static %} 
+
+{% block contenidoQueCambia %} 
+
+<h1>Vendedores</h1>
+<p>Aca va la info de los Productos</p>
+
+
+<p>
+    Cualquier cosa
+</p>
+
+Ingresar un vendedor:
+
+<form action=""     method="post">{% csrf_token %} 
+    <table>
+        {{form.as_table}}
+    </table>
+    <input type="submit" value="Crear"> 
+</form>
+
+<a href="{% url 'Buscar1'%"> Buscar por vendedor</a>
+
+{% endblock %}

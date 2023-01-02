@@ -1,0 +1,19 @@
+{% extends "app1/padre.html" %} 
+
+{% load static %} 
+
+{% block contenidoQueCambia %} 
+
+    <ul>
+        {% for vendedor in object_list %}
+            <p>{{vendedor.nombreCompleto}}</p>
+            <p>
+                <a href="{% url 'Detail' vendedor.id %}">Ver</a>
+                <a href="{% url 'Edit' vendedor.id %}">Editar</a>
+                <a href="{% url 'Delete' vendedor.id %}">Delete</a>
+            </p>
+        {% endfor %}
+
+    </ul>
+
+{% endblock %} 

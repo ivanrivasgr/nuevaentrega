@@ -1,0 +1,14 @@
+{% extends "app1/padre.html" %} 
+
+{% load static %} 
+
+{% block contenidoQueCambia %} 
+
+nombreCompleto: {{cliente.nombreCompleto}}
+telefono: {{cliente.telefono}}
+fechaNac: {{cliente.fechaNac}}
+
+
+<a href="{%url 'List'%}">Regresar</a>
+
+{% endblock %} 

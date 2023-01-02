@@ -6,23 +6,32 @@ from app1.models import Clientes
 from django.core import serializers
 from app1.forms import ProductoFormulario
 from app1.forms import VendedorFormulario
+from app1.forms import ClienteFormulario
 
 
 def buscar(request):
-    productos_views = request.GET["productos_views"]
-    vendedores_todos = Productos.objects.filter(nombreCompleto=productos_views)
-    return render(request,"app1/resultadoproductos.html",{"productos":productos_views,"vendedores":vendedores_todos})
+    productos_views = request.GET.get("productos_views") 
+    productos_todos = Productos.objects.filter(nombreCompleto=productos_views)
+    return render(request,"app1/resultadoproductos.html",{"productos":productos_views,"productos":productos_todos})
 
 def buscar1(request):
-    vendedores_views = request.GET["vendedores_views"]
-    clientes_todos = Vendedores.objects.filter(nombreCompleto=vendedores_views)
-    return render(request,"app1/resultadovendedores.html",{"vendedores":vendedores_views,"clientes":clientes_todos})
+    vendedores_views = request.GET.get("vendedores_views")
+    vendedores_todos = Vendedores.objects.filter(nombreCompleto=vendedores_views)
+    return render(request,"app1/resultadovendedores.html",{"vendedores":vendedores_views,"vendedores":vendedores_todos})
+
+def buscar2(request):
+    clientes_views = request.GET.get("clientes_views")
+    clientes_todos = Clientes.objects.filter(nombreCompleto=clientes_views)
+    return render(request,"app1/resultadoclientes.html",{"clientes":clientes_views,"clientes":clientes_todos})
 
 def buscarproducto(request):
     return render(request, "app1/busquedaproducto.html")  
 
 def buscarvendedor(request):
     return render(request, "app1/busquedavendedor.html")
+
+def buscarcliente(request):
+    return render(request, "app1/busquedacliente.html")
 
 # Create your views here.
 def inicio(request):
@@ -69,7 +78,20 @@ def vendedorApi(request):
     return HttpResponse(serializers.serialize('json',vendedores_todos))
 
 def cliente(request):
-    return render(request, "app1/cliente.html")
+    if request.method == "POST":
+    
+            miFormulario = ClienteFormulario(request.POST)
+            print(miFormulario)
+
+            if miFormulario.is_valid:
+                    informacion = miFormulario.cleaned_data
+                    Cliente = Clientes(nombreCompleto=informacion["nombreCompleto"], telefono=informacion["telefono"], fechaNac=informacion["fechaNac"])
+                    Cliente.save()
+                    return render(request, "app1/inicio.html")
+    else:
+            miFormulario = ClienteFormulario()
+     
+    return render(request, "app1/cliente.html",{"miFormulario":miFormulario})
 
 def clienteApi(request):
     clientes_todos = Clientes.objects.all()
@@ -97,6 +119,49 @@ def eliminar_producto(request):
     producto.delete()
     return HttpResponse(f'Productos {nombreCompleto_nuevo} ha sido eliminado')
 
+#-----------------------------------------
+
+def leer_vendedores(request):
+    vendedores_all = Vendedores.objects.all()
+    return HttpResponse(serializers.serialize("json",vendedores_all))
+
+def crear_vendedor(request):
+    vendedor = Vendedores(nombreCompleto="VendedoresTest",telefono="0000001", fechaNac="0001-01-01")
+    vendedor.save()
+    return HttpResponse(f'Vendedores {vendedor.nombreCompleto} ha sido creado')
+
+def editar_vendedor(request):
+    nombreCompleto_consulta = "VendedorTest"
+    Vendedores.objects.filter(nombreCompleto=nombreCompleto_consulta).update(nombreCompleto="NombrenuevoVendedorTest")
+    return HttpResponse(f'Vendedores {nombreCompleto_consulta} ha sido actualizado')
+
+def eliminar_vendedor(request):
+    nombreCompleto_nuevo='NombrenuevoVendedorTest'
+    vendedor = Vendedores.objects.get(nombreCompleto=nombreCompleto_nuevo)
+    vendedor.delete()
+    return HttpResponse(f'Vendedores {nombreCompleto_nuevo} ha sido eliminado')
+
+#-----------------------------------------
+
+def leer_clientes(request):
+    clientes_all = Clientes.objects.all()
+    return HttpResponse(serializers.serialize("json",clientes_all))
+
+def crear_cliente(request):
+    cliente = Clientes(nombreCompleto="ClientesTest",telefono="0000001", fechaNac="0001-01-01")
+    cliente.save()
+    return HttpResponse(f'Clientes {cliente.nombreCompleto} ha sido creado')
+
+def editar_cliente(request):
+    nombreCompleto_consulta = "ClienteTest"
+    Clientes.objects.filter(nombreCompleto=nombreCompleto_consulta).update(nombreCompleto="NombrenuevoClienteTest")
+    return HttpResponse(f'Clientes {nombreCompleto_consulta} ha sido actualizado')
+
+def eliminar_cliente(request):
+    nombreCompleto_nuevo='NombrenuevoClienteTest'
+    cliente = Clientes.objects.get(nombreCompleto=nombreCompleto_nuevo)
+    cliente.delete()
+    return HttpResponse(f'Clientes {nombreCompleto_nuevo} ha sido eliminado')
 
 
 
@@ -121,6 +186,34 @@ class ProductosEdit(UpdateView):
     fields = ['nombreCompleto','Referencia','fechadecaducidad','categoria']
     success_url = "/app1/producto/list/"
 
+class VendedoresList(ListView):
+    model = Vendedores
+    template = "app1/vendedores_list.html"
+
+class VendedoresCreate(CreateView):
+    model = Vendedores
+    fields = ['nombreCompleto','telefono','fechaNac']
+    success_url = "/app1/vendedor/list/"
+
+class VendedoresEdit(UpdateView):
+    model = Vendedores
+    fields = ['nombreCompleto','telefono','fechaNac']
+    success_url = "/app1/vendedor/list/"
+
+class ClientesList(ListView):
+    model = Clientes
+    template = "app1/clientes_list.html"
+
+class ClientesCreate(CreateView):
+    model = Clientes
+    fields = ['nombreCompleto','telefono','fechaNac']
+    success_url = "/app1/cliente/list/"
+
+class ClientesEdit(UpdateView):
+    model = Clientes
+    fields = ['nombreCompleto','telefono','fechaNac']
+    success_url = "/app1/cliente/list/"
+
 from django.views.generic.detail import DetailView
 
 class ProductosDetail(DetailView):
@@ -131,3 +224,21 @@ class ProductosDelete(DeleteView):
     model = Productos
     fields = '__all__'
     success_url = "/app1/producto/list/"
+
+class VendedoresDetail(DetailView):
+    model = Vendedores
+    template_name = "app1/vendedores_detail.html"
+
+class VendedoresDelete(DeleteView):
+    model = Vendedores
+    fields = '__all__'
+    success_url = "/app1/vendedor/list/"
+
+class ClientesDetail(DetailView):
+    model = Clientes
+    template_name = "app1/clientes_detail.html"
+
+class ClientesDelete(DeleteView):
+    model = Clientes
+    fields = '__all__'
+    success_url = "/app1/cliente/list/"
